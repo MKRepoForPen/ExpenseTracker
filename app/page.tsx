@@ -17,7 +17,20 @@ export default function DashboardPage() {
 
   return (
     <>
-      <PageHeader title="Dashboard" subtitle="An overview of your spending" />
+      <PageHeader
+        title="Dashboard"
+        subtitle="An overview of your spending"
+        actions={
+          expenses.length > 0 && (
+            <Link href="/hub" className="btn-secondary">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
+                <path d="M4 12v7a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7M16 6l-4-4-4 4M12 2v13" />
+              </svg>
+              Share & export
+            </Link>
+          )
+        }
+      />
       <StorageErrorBanner />
       {expenses.length === 0 ? (
         <EmptyState />

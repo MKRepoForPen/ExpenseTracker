@@ -7,17 +7,20 @@ interface ModalProps {
   title: string;
   onClose: () => void;
   children: React.ReactNode;
-  size?: "sm" | "md";
+  size?: "sm" | "md" | "lg";
 }
 
 export function Modal({ open, title, onClose, children, size = "md" }: ModalProps) {
   const panelRef = useRef<HTMLDivElement>(null);
+  // Read through a ref so callers passing an inline onClose don't re-run the effect (and steal focus) every render.
+  const onCloseRef = useRef(onClose);
+  onCloseRef.current = onClose;
 
   useEffect(() => {
     if (!open) return;
     const previouslyFocused = document.activeElement as HTMLElement | null;
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
+      if (e.key === "Escape") onCloseRef.current();
     };
     document.addEventListener("keydown", onKey);
     document.body.style.overflow = "hidden";
@@ -29,7 +32,7 @@ export function Modal({ open, title, onClose, children, size = "md" }: ModalProp
       document.body.style.overflow = "";
       previouslyFocused?.focus();
     };
-  }, [open, onClose]);
+  }, [open]);
 
   if (!open) return null;
 
@@ -43,7 +46,7 @@ export function Modal({ open, title, onClose, children, size = "md" }: ModalProp
         aria-labelledby="modal-title"
         tabIndex={-1}
         className={`relative w-full animate-slide-up rounded-t-2xl bg-white shadow-xl outline-none sm:rounded-2xl ${
-          size === "sm" ? "sm:max-w-sm" : "sm:max-w-lg"
+          size === "sm" ? "sm:max-w-sm" : size === "lg" ? "sm:max-w-3xl" : "sm:max-w-lg"
         }`}
       >
         <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4">
