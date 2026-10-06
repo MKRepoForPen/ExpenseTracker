@@ -5,6 +5,7 @@ import { ToastProvider } from "@/components/ToastProvider";
 import { ExpensesProvider } from "@/components/ExpensesProvider";
 import { ExpenseDialogProvider } from "@/components/ExpenseDialogProvider";
 import { Header } from "@/components/Header";
+import { ExportCenterProvider } from "@/components/export/ExportCenter";
 
 const inter = Inter({ subsets: ["latin"], display: "swap" });
 
@@ -24,8 +25,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <ToastProvider>
           <ExpensesProvider>
             <ExpenseDialogProvider>
-              <Header />
-              <main className="mx-auto max-w-6xl px-4 py-6 sm:px-6 sm:py-8">{children}</main>
+              <ExportCenterProvider>
+                <Header />
+                <main className="mx-auto max-w-6xl px-4 py-6 sm:px-6 sm:py-8">{children}</main>
+              </ExportCenterProvider>
             </ExpenseDialogProvider>
           </ExpensesProvider>
         </ToastProvider>

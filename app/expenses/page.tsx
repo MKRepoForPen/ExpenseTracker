@@ -4,12 +4,12 @@ import { useMemo, useState } from "react";
 import { useExpenses } from "@/components/ExpensesProvider";
 import { useToast } from "@/components/ToastProvider";
 import { ExpenseFiltersBar } from "@/components/ExpenseFiltersBar";
+import { ExportButton } from "@/components/export/ExportButton";
 import { ExpenseList } from "@/components/ExpenseList";
 import { Modal } from "@/components/Modal";
 import { EmptyState, ListSkeleton, PageHeader, StorageErrorBanner } from "@/components/PageStates";
 import { filterExpenses, sortByDateDesc, sum } from "@/lib/analytics";
-import { downloadCSV } from "@/lib/csv";
-import { formatCurrency, todayISO } from "@/lib/format";
+import { formatCurrency } from "@/lib/format";
 import { EMPTY_FILTERS, type ExpenseFilters } from "@/lib/types";
 
 export default function ExpensesPage() {
@@ -22,19 +22,6 @@ export default function ExpensesPage() {
 
   if (isLoading) return <ListSkeleton />;
 
-  const handleExport = () => {
-    if (visible.length === 0) {
-      toast("Nothing to export with the current filters", "error");
-      return;
-    }
-    try {
-      downloadCSV(visible, `expenses-${todayISO()}.csv`);
-      toast(`Exported ${visible.length} expense${visible.length === 1 ? "" : "s"} to CSV`);
-    } catch {
-      toast("Export failed. Please try again.", "error");
-    }
-  };
-
   return (
     <>
       <PageHeader
@@ -43,12 +30,13 @@ export default function ExpensesPage() {
         actions={
           expenses.length > 0 && (
             <>
-              <button onClick={handleExport} className="btn-secondary">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
-                  <path d="M12 3v12m0 0-4-4m4 4 4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2" />
-                </svg>
-                Export CSV
-              </button>
+              <ExportButton
+                seed={{
+                  startDate: filters.startDate,
+                  endDate: filters.endDate,
+                  categories: filters.category === "All" ? undefined : [filters.category],
+                }}
+              />
               <button onClick={() => setConfirmClear(true)} className="btn-secondary text-rose-600 hover:bg-rose-50">
                 Clear all
               </button>

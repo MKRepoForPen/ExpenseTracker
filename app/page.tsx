@@ -7,6 +7,7 @@ import { SummaryCards } from "@/components/SummaryCards";
 import { CategoryBreakdown, MonthlyTrendChart } from "@/components/Charts";
 import { ExpenseList } from "@/components/ExpenseList";
 import { DashboardSkeleton, EmptyState, PageHeader, StorageErrorBanner } from "@/components/PageStates";
+import { ExportButton } from "@/components/export/ExportButton";
 import { sortByDateDesc } from "@/lib/analytics";
 
 export default function DashboardPage() {
@@ -17,7 +18,11 @@ export default function DashboardPage() {
 
   return (
     <>
-      <PageHeader title="Dashboard" subtitle="An overview of your spending" />
+      <PageHeader
+        title="Dashboard"
+        subtitle="An overview of your spending"
+        actions={expenses.length > 0 && <ExportButton />}
+      />
       <StorageErrorBanner />
       {expenses.length === 0 ? (
         <EmptyState />
