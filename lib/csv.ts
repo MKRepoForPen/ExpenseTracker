@@ -7,9 +7,9 @@ function escapeCell(value: string): string {
 }
 
 export function expensesToCSV(expenses: Expense[]): string {
-  const header = ["Date", "Category", "Description", "Amount"];
+  const header = ["Date", "Category", "Amount", "Description"];
   const rows = expenses.map((e) =>
-    [e.date, e.category, escapeCell(e.description), e.amount.toFixed(2)].join(","),
+    [e.date, e.category, e.amount.toFixed(2), escapeCell(e.description)].join(","),
   );
   return [header.join(","), ...rows].join("\r\n");
 }

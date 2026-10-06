@@ -8,6 +8,8 @@ import { CategoryBreakdown, MonthlyTrendChart } from "@/components/Charts";
 import { ExpenseList } from "@/components/ExpenseList";
 import { DashboardSkeleton, EmptyState, PageHeader, StorageErrorBanner } from "@/components/PageStates";
 import { sortByDateDesc } from "@/lib/analytics";
+import { downloadCSV } from "@/lib/csv";
+import { todayISO } from "@/lib/format";
 
 export default function DashboardPage() {
   const { expenses, isLoading } = useExpenses();
@@ -17,7 +19,17 @@ export default function DashboardPage() {
 
   return (
     <>
-      <PageHeader title="Dashboard" subtitle="An overview of your spending" />
+      <PageHeader
+        title="Dashboard"
+        subtitle="An overview of your spending"
+        actions={
+          expenses.length > 0 && (
+            <button onClick={() => downloadCSV(sortByDateDesc(expenses), `expenses-${todayISO()}.csv`)} className="btn-secondary">
+              Export Data
+            </button>
+          )
+        }
+      />
       <StorageErrorBanner />
       {expenses.length === 0 ? (
         <EmptyState />
